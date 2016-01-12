@@ -5,4 +5,15 @@
     <color name="accent">#CB531D</color>
     <color name="light_gray">#F2F2F2</color>
 
+    <color name="my_primary_text">#ffffff</color>
+    <color name="my_secondary_text">#ffffff</color>
+    <color name="my_icons">#FFFFFF</color>
+    <color name="my_divider">#B6B6B6</color>
+
+
+    <color name="window_background">#CC000000</color>
+
+
 </resources>
+
+

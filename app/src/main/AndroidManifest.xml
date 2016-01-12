@@ -15,7 +15,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+
 
         <!-- Begin Stuff Facebook Login -->
         <meta-data
@@ -29,7 +31,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- End Facebook Stuff -->
 
-        <activity android:name=".Login">
+        <activity android:name=".activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,15 +52,15 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".LeftDrawerActivity"
+            android:name=".activities.LeftDrawerActivity"
             android:label="@string/title_activity_left_drawer"
-            android:parentActivityName=".MapsActivity">
+            android:parentActivityName=".activities.MapsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="sights.sights.MapsActivity" />
+                android:value=".activities.MapsActivity" />
         </activity>
     </application>
 
