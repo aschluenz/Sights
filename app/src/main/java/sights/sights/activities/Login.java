@@ -34,7 +34,9 @@ public class Login extends Activity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 goToMap();
+                loginResult.getAccessToken().getUserId();
            /*     info.setText("User ID:  " +
+
                         loginResult.getAccessToken().getUserId() + "\n" +
                         "Auth Token: " + loginResult.getAccessToken().getToken());
             */
