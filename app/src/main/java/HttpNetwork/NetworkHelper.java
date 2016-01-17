@@ -16,7 +16,7 @@ public class NetworkHelper {
 
     OkHttpClient client = new OkHttpClient();
 
-    Call post(String url, String json, Callback callback){
+    public Call post(String url, String json, Callback callback){
         RequestBody body = RequestBody.create(JSON,json);
         Request request = new Request.Builder()
                 .url(url)

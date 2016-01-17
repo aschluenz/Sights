@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -12,6 +13,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import HttpNetwork.LoginAsyncRunner;
+import HttpNetwork.NetworkHelper;
 import sights.sights.R;
 
 public class Login extends Activity {
@@ -35,11 +41,11 @@ public class Login extends Activity {
             public void onSuccess(LoginResult loginResult) {
                 goToMap();
                 loginResult.getAccessToken().getUserId();
-           /*     info.setText("User ID:  " +
 
-                        loginResult.getAccessToken().getUserId() + "\n" +
-                        "Auth Token: " + loginResult.getAccessToken().getToken());
-            */
+                LoginAsyncRunner runner = new LoginAsyncRunner();
+                String usertoken = loginResult.getAccessToken().getToken();
+                String userid = loginResult.getAccessToken().getUserId();
+                runner.execute(usertoken,userid);
             }
 
             @Override

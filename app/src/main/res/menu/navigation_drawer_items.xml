@@ -6,19 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_item_1"
-            android:title="Toolbar" />
+            android:title="Profile" />
 
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
 
         <item
             android:id="@+id/navigation_item_2"
-            android:title="Toolbar" />
+            android:title="My Routes" />
 
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
 
         <item
             android:id="@+id/navigation_item_3"
-            android:title="NavigationView"
+            android:title="My Places"
             />
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
 

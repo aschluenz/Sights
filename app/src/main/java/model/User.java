@@ -18,6 +18,4 @@ public class User {
     public List<Route> routes;
     public List<Place> places;
 
-
-
 }
