@@ -1,6 +1,7 @@
 package sights.sights.activities;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import AppLogic.Searchhelper;
+import AppLogic.GetPlacesAsyncRunner;
 import sights.sights.R;
 
 
@@ -79,6 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(MapsPoint).title("Marker in Berlin"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(MapsPoint));
     }
+
 
 
     public void setToolbar(){
@@ -156,6 +160,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void doSearch(String SearchTerm) {
 
+        Searchhelper sh = new Searchhelper();
+        LatLng newLatLng = null;
+        newLatLng = sh.determineLatLngFromAdress(this, SearchTerm);
+
+        UpdateCamera(newLatLng);
+
+
 
 
     }
@@ -167,6 +178,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         super.onBackPressed();
+    }
+
+    private void UpdateCamera(LatLng newLatLng){
+    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLatLng, 15);
+        mMap.addMarker(new MarkerOptions().position(newLatLng).title("You are here"));
+        mMap.animateCamera(update);
+    }
+
+    private String getPlacesfromLatLng(LatLng latLng){
+        String key = Resources.getSystem().getString(R.string.google_maps_key);
+
+        String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+                "json?location="+ latLng.latitude + "," + latLng.longitude +
+                "&radius=1000&sensor=true" +
+                "&rypes=museum|art_gallery"+
+                "&key=" + key;
+
+        return placesSearchStr;
+
+        GetPlacesAsyncRunner places = new GetPlacesAsyncRunner();
+
     }
 
 

@@ -26,4 +26,14 @@ public class NetworkHelper {
         call.enqueue(callback);
         return call;
     }
+
+    public Call get(String url, Callback callback){
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+        return call;
+
+    }
 }
