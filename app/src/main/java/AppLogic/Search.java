@@ -1,9 +1,14 @@
-package Geo;
+package AppLogic;
 
 /**
  * Created by andyschlunz on 16.01.16.
  */
-public class GeocodeJSONParser {
+
+
+
+
+public class Search {
+
 
 
 }

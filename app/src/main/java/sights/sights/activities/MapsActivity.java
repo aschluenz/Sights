@@ -1,5 +1,6 @@
 package sights.sights.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -7,8 +8,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -22,8 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import sights.sights.R;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-        View.OnClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+
+    private EditText edtSearch;
+    private boolean isSearchOpened = false;
 
     private GoogleMap mMap;
     DrawerLayout drawerLayout;
@@ -31,6 +40,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     FloatingActionButton fab;
 
     private GoogleApiClient mGoogleApiClient;
+
+        //Berlin
+    LatLng MapsPoint = new LatLng(52.5074588,13.2847137);
 
 
 
@@ -42,16 +54,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-
 
         setToolbar();
         setFab();
@@ -73,9 +75,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(52.5072094, 13.1442686);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+       // LatLng sydney = new LatLng(52.5072094, 13.1442686);
+        mMap.addMarker(new MarkerOptions().position(MapsPoint).title("Marker in Berlin"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(MapsPoint));
     }
 
 
@@ -105,33 +107,67 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setFab(){
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if(fab != null){
-            fab.setOnClickListener(this);
+            fab.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    handleSearch();
+                }
+            });
+        }
+    }
+    protected void handleSearch(){
+        ActionBar ab = getSupportActionBar();
+
+        if(isSearchOpened){
+            ab.setDisplayShowCustomEnabled(false);
+            ab.setDisplayShowTitleEnabled(true);
+
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+
+
+        }else {//open the search entry
+            ab.setDisplayShowCustomEnabled(true);
+            ab.setCustomView(R.layout.search_bar);
+            ab.setDisplayShowTitleEnabled(false);
+
+            edtSearch= (EditText) ab.getCustomView().findViewById(R.id.edtSearch);
+
+            edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                    if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                        doSearch(edtSearch.getText().toString());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            edtSearch.requestFocus();
+
+            //Open Keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edtSearch, InputMethodManager.SHOW_IMPLICIT);
+
+
+
+
         }
 
+    }
+
+    private void doSearch(String SearchTerm) {
+
 
 
     }
+
     @Override
-    public void onClick(View view){
-        if (view.getId() == R.id.fab){
-
-
+    public void onBackPressed(){
+        if(isSearchOpened){
+            handleSearch();
+            return;
         }
-
+        super.onBackPressed();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
 
 
 }

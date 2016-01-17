@@ -4,7 +4,7 @@
     <string name="facebook_app_id">1667956510124948</string>
     <string name="google_app_id" translatable="false">1:1035469437078:android:73a4fb8297b2cd4f</string>
 
-    <string name="title_activity_maps">Basti</string>
+    <string name="title_activity_maps">Sights</string>
     <string name="title_activity_left_drawer">LeftDrawerActivity</string>
 
     <string name="title_section1">Section 1</string>
