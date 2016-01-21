@@ -197,7 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return placesSearchStr;
 
-        GetPlacesAsyncRunner places = new GetPlacesAsyncRunner();
+      //  GetPlacesAsyncRunner places = new GetPlacesAsyncRunner();
 
     }
 

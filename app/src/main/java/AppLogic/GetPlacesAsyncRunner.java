@@ -50,6 +50,7 @@ public class GetPlacesAsyncRunner extends AsyncTask<String, Void, String> {
             });
 
         }
+        return null;
     }
 
 
