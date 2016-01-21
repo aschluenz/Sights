@@ -1,10 +1,7 @@
 package AppLogic;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
-
-import com.google.android.gms.location.places.Place;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +16,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import model.Place;
 import sights.sights.R;
 
 /**
  * Created by andyschlunz on 19.01.16.
  */
-public class GooglePlaces {
+public class GooglePlacesService {
 
 
 
@@ -36,7 +34,7 @@ public class GooglePlaces {
     private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
     private static final String PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
 
-    private static final String TAG = GooglePlaces.class.getSimpleName();
+    private static final String TAG = GooglePlacesService.class.getSimpleName();
 
 
     @SuppressWarnings("unused")
@@ -71,7 +69,7 @@ public class GooglePlaces {
             for (int i = 0; i < array.length(); i++) {
                 try {
                     Place place = Place
-                    .jsonToPontoReferencia((JSONObject) array.get(i),false);
+                    .jsonToReferncePoint((JSONObject) array.get(i));
                     Log.d("Places Services ", "" + place);
                     arrayList.add(place);
                 } catch (Exception e) {
@@ -81,7 +79,7 @@ public class GooglePlaces {
             return arrayList;
 
         } catch (JSONException ex) {
-            Logger.getLogger(GooglePlaces.class.getName()).log(Level.SEVERE,
+            Logger.getLogger(GooglePlacesService.class.getName()).log(Level.SEVERE,
                     null, ex);
         }
         return null;
