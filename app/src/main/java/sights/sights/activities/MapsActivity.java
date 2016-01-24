@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,8 +28,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import AppLogic.Adapter.InfoWindowAdapterMarker;
 import AppLogic.Searchhelper;
-import HttpNetwork.GetPlacesAsyncRunner;
+import HttpNetwork.GetPlacesAsyncForMap;
 import sights.sights.R;
 
 
@@ -47,6 +47,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     NavigationView navigationView;
     Toolbar toolbar;
     FloatingActionButton fab;
+    Context mContext;
+
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -59,6 +61,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mContext = this;
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -72,8 +76,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         navigationView = (NavigationView) findViewById(R.id.navigation);
 
 
+
+
         setFab();
         setUpNavigationDrawer();
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -119,26 +127,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new InfoWindowAdapterMarker(mContext));
+
 
         // Add a marker in Sydney and move the camera
        // LatLng sydney = new LatLng(52.5072094, 13.1442686);
         mMap.addMarker(new MarkerOptions().position(MapsPoint).title("Marker in Berlin"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(MapsPoint));
+
+        appMarker();
+
     }
 
 
 
 
+    public void appMarker(){
+        new GetPlacesAsyncForMap(mMap,MapsPoint ,"museum").execute();
 
-    public void setToolbar(){
+    }
+
+
+
+
+    public void setToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-        //Show Menu Icon
-      //  final ActionBar ab = getSupportActionBar();
-      //  ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-      //  ab.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setUpNavigationDrawer(){

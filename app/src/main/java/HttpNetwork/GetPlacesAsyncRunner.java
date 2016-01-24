@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.List;
 
 import AppLogic.GooglePlacesService;
@@ -24,9 +26,14 @@ public class GetPlacesAsyncRunner extends AsyncTask<Void, Void, Void> {
     private String[] imageUrl;
     private ListView  listView;
 
+    public GetPlacesAsyncRunner(){
+
+    };
+
     public GetPlacesAsyncRunner(Context context, ListView listView){
         this.context = context;
         this.listView = listView;
+
     }
     @Override
     protected void onPostExecute(Void result){
