@@ -29,7 +29,7 @@ public class GooglePlacesService {
 
 
     // Google Places serach url's
-    private static final String API_KEY = Resources.getSystem().getString(R.string.google_maps_key);
+    private static final String API_KEY = "AIzaSyBV64nPqzGNmMWLBehsj2uxUrr-RlyJeS8";
 
     private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
     private static final String PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
@@ -43,7 +43,7 @@ public class GooglePlacesService {
     private double _longitude;
     private double _radius;
 
-    public List<Place> search(double latitude,double longitude,double radius, String types ){
+    public List<Place> findPlaces(double latitude,double longitude,double radius, String types ){
         this._latitude = latitude;
         this._longitude= longitude;
         this._radius = radius;
@@ -85,12 +85,13 @@ public class GooglePlacesService {
         return null;
     }
 
-    protected String getJSON(String url) {
+    private String getJSON(String url) {
         return getUrlContents(url);
     }
 
     private String getUrlContents(String theUrl) {
         StringBuilder content = new StringBuilder();
+
 
         try {
             URL url = new URL(theUrl);

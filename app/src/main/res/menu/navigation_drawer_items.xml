@@ -6,24 +6,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_item_1"
+            android:title="Places List" />
+        <item
+            android:id="@+id/navigation_item_2"
             android:title="Profile" />
 
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
 
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/navigation_item_3"
             android:title="My Routes" />
 
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
 
         <item
-            android:id="@+id/navigation_item_3"
+            android:id="@+id/navigation_item_4"
             android:title="My Places"
             />
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
-
-
-
     </group>
+
 
 </menu>

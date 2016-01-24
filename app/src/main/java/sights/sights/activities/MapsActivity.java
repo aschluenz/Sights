@@ -1,9 +1,11 @@
 package sights.sights.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,7 +30,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import AppLogic.Searchhelper;
-import AppLogic.GetPlacesAsyncRunner;
+import HttpNetwork.GetPlacesAsyncRunner;
 import sights.sights.R;
 
 
@@ -37,8 +40,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private EditText edtSearch;
     private boolean isSearchOpened = false;
 
+    private int currentSelectedPosition;
+
     private GoogleMap mMap;
     DrawerLayout drawerLayout;
+    NavigationView navigationView;
     Toolbar toolbar;
     FloatingActionButton fab;
 
@@ -58,9 +64,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+
         setToolbar();
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+
+
         setFab();
-        setNavigationView();
+        setUpNavigationDrawer();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_item_1:
+                        Intent a = new Intent(MapsActivity.this, PlacesListActivity.class);
+                        startActivity(a);
+                        currentSelectedPosition = 0;
+                        return true;
+                    case R.id.navigation_item_2:
+                        Intent b = new Intent(MapsActivity.this,ProfileActivity.class);
+                        startActivity(b);
+                        currentSelectedPosition = 1;
+                        return true;
+                    case R.id.navigation_item_3:
+                        Intent c = new Intent(MapsActivity.this,MyRoutesActivity.class);
+                        startActivity(c);
+                        currentSelectedPosition = 2;
+                        return true;
+                    case R.id.navigation_item_4:
+                      //  Intent d = new Intent(MapsActivity.this,My);
+                        currentSelectedPosition = 3;
+                        return true;
+                    default:
+                        return true;
+                }
+
+            }
+        });
     }
 
 
@@ -85,17 +128,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+
     public void setToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
         //Show Menu Icon
-        final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+      //  final ActionBar ab = getSupportActionBar();
+      //  ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+      //  ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setNavigationView(){
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    private void setUpNavigationDrawer(){
+        if(toolbar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationIcon(R.drawable.ic_menu);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+            });
+
+        }
     }
 
     @Override
@@ -111,8 +168,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setFab(){
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if(fab != null){
-            fab.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
+            fab.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
                     handleSearch();
                 }
             });
@@ -200,6 +257,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       //  GetPlacesAsyncRunner places = new GetPlacesAsyncRunner();
 
     }
+
+
 
 
 }

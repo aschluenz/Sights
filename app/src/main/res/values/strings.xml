@@ -20,5 +20,7 @@
 
 
     <string name="action_find_location">Find</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_places_list">PlacesListActivity</string>
 
 </resources>
