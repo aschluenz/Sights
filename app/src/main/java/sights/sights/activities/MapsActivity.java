@@ -1,6 +1,8 @@
 package sights.sights.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,9 +29,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import AppLogic.Adapter.InfoWindowAdapterMarker;
+import AppLogic.RouteHandler;
 import AppLogic.Searchhelper;
 import HttpNetwork.GetPlacesAsyncForMap;
 import sights.sights.R;
@@ -42,12 +47,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private int currentSelectedPosition;
 
+
     private GoogleMap mMap;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
     FloatingActionButton fab;
     Context mContext;
+
+    RouteHandler rh = new RouteHandler();
 
 
     private GoogleApiClient mGoogleApiClient;
@@ -68,21 +76,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-
         setToolbar();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
 
-
-
-
         setFab();
         setUpNavigationDrawer();
 
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
@@ -93,17 +95,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         currentSelectedPosition = 0;
                         return true;
                     case R.id.navigation_item_2:
-                        Intent b = new Intent(MapsActivity.this,ProfileActivity.class);
+                        Intent b = new Intent(MapsActivity.this, ProfileActivity.class);
                         startActivity(b);
                         currentSelectedPosition = 1;
                         return true;
                     case R.id.navigation_item_3:
-                        Intent c = new Intent(MapsActivity.this,MyRoutesActivity.class);
+                        Intent c = new Intent(MapsActivity.this, MyRoutesActivity.class);
                         startActivity(c);
                         currentSelectedPosition = 2;
                         return true;
                     case R.id.navigation_item_4:
-                      //  Intent d = new Intent(MapsActivity.this,My);
+                        //  Intent d = new Intent(MapsActivity.this,My);
                         currentSelectedPosition = 3;
                         return true;
                     default:
@@ -112,6 +114,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+
+
+
     }
 
 
@@ -136,6 +141,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(MapsPoint));
 
         appMarker();
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getBaseContext(), PlaceDetailActivity.class);
+                String placeId = marker.getSnippet();
+                intent.putExtra("placeID", placeId);
+
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -162,10 +178,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationIcon(R.drawable.ic_menu);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
+                @Override
+                public void onClick(View v) {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
             });
 
         }
@@ -186,11 +202,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(fab != null){
             fab.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    handleSearch();
+                    openCreateRouteDialog();
                 }
             });
         }
     }
+
+    private void openCreateRouteDialog() {
+        LayoutInflater inflater = LayoutInflater.from(MapsActivity.this);
+        View createRouteDialog  = inflater.inflate(R.layout.create_route_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
+        alertDialogBuilder.setView(createRouteDialog);
+
+        final EditText routeName = (EditText) createRouteDialog.findViewById(R.id.editTextCreateRoute);
+
+        //setup dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean result =  rh.createRoute(routeName.getText().toString());
+                }
+            })
+                .setNegativeButton("Chancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        //Create Dialog
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+
+    }
+
     protected void handleSearch(){
         ActionBar ab = getSupportActionBar();
 
@@ -225,8 +270,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             imm.showSoftInput(edtSearch, InputMethodManager.SHOW_IMPLICIT);
 
 
-
-
         }
 
     }
@@ -238,9 +281,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         newLatLng = sh.determineLatLngFromAdress(this, SearchTerm);
 
         UpdateCamera(newLatLng);
-
-
-
 
     }
 
@@ -259,20 +299,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.animateCamera(update);
     }
 
-    private String getPlacesfromLatLng(LatLng latLng){
-        String key = Resources.getSystem().getString(R.string.google_maps_key);
-
-        String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-                "json?location="+ latLng.latitude + "," + latLng.longitude +
-                "&radius=1000&sensor=true" +
-                "&rypes=museum|art_gallery"+
-                "&key=" + key;
-
-        return placesSearchStr;
-
-      //  GetPlacesAsyncRunner places = new GetPlacesAsyncRunner();
-
-    }
 
 
 

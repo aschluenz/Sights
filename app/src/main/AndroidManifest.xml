@@ -61,7 +61,8 @@
         <activity
             android:name=".activities.PlacesListActivity"
             android:label="@string/title_activity_places_list"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".activities.PlaceDetailActivity"></activity>
     </application>
 
 </manifest>

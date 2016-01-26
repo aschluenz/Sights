@@ -25,9 +25,6 @@ import sights.sights.R;
 public class GooglePlacesService {
 
 
-
-
-
     // Google Places serach url's
     private static final String API_KEY = "AIzaSyBV64nPqzGNmMWLBehsj2uxUrr-RlyJeS8";
 
