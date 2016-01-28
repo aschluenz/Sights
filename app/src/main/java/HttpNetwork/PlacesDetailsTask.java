@@ -3,6 +3,7 @@ package HttpNetwork;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+import AppLogic.AsyncResponse;
 import AppLogic.PlaceDetailsJSONPARSER;
 
 /**
@@ -22,6 +24,7 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
 
     String data = null;
 
+    public AsyncResponse delegate = null;
 
     @Override
     protected String doInBackground(String... url) {
@@ -42,6 +45,13 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
         ParserTask parserTask = new ParserTask();
 
         parserTask.execute(result);
+
+        try {
+            delegate.prozessFinish(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String downloadURl(String strURL) throws IOException{
