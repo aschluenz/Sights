@@ -3,6 +3,7 @@ package sights.sights.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +29,8 @@ public class PlaceDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_place_detail);
 
         String reference = getIntent().getStringExtra("reference");
+
+        Log.d("Details Reference; ", reference);
 
         PlacesDetailsTask placesTask = new PlacesDetailsTask();
 

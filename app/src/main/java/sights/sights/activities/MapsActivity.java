@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -147,7 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(getBaseContext(), PlaceDetailActivity.class);
                 String placeId = marker.getSnippet();
-                intent.putExtra("placeID", placeId);
+                Log.d("Placeid by click:", placeId);
+                intent.putExtra("reference", placeId);
 
                 startActivity(intent);
             }

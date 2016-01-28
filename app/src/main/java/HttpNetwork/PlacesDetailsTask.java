@@ -25,6 +25,8 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
 
     @Override
     protected String doInBackground(String... url) {
+        Log.d("url[0]", url[0]);
+
         try{
             data = downloadURl(url[0]);
 
@@ -32,7 +34,6 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
             Log.d("Background Task", e.toString());
 
         }
-
         return data;
     }
 
@@ -67,14 +68,18 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
             bufferedReader.close();
 
         }catch (Exception e){
-            Log.d("Exception while downloading: ", e.toString());
+            Log.d("Exception download: ", String.valueOf(e));
         }finally {
-            iStream.close();
-            urlConnection.disconnect();
+            if (iStream != null) {
+                iStream.close();
+            }
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
-
-        return null;
-    };
+        Log.d("downloadURL data: ",data);
+        return data;
+    }
 
 
 
@@ -101,6 +106,13 @@ public class PlacesDetailsTask extends AsyncTask<String, Integer,String> {
 
         @Override
         protected void onPostExecute(HashMap<String, String> hashPlaceDetails) {
+            String result;
+            if(hashPlaceDetails.isEmpty()) {
+                 result = "Hashmap is empty!!!!";
+            }else
+            result = "Hashmap is not empty";
+
+            //Log.d("hashPlaceDetails is empty: ",result);
             String name = hashPlaceDetails.get("name");
             String icon = hashPlaceDetails.get("icon");
             String vicinity = hashPlaceDetails.get("vicinity");
