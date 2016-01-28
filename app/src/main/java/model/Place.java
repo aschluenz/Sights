@@ -76,7 +76,7 @@ public class Place {
             result.setIcon(referencePoint.getString("icon"));
             result.setName(referencePoint.getString("name"));
             result.setVicinity(referencePoint.getString("vicinity"));
-            result.setId(referencePoint.getString("id"));
+            result.setId(referencePoint.getString("place_id"));
             return result;
 
         }catch (JSONException e) {

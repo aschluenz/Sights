@@ -17,6 +17,8 @@ public class PlaceDetailActivity extends AppCompatActivity
 {
 
     private static final String API_KEY = "AIzaSyBV64nPqzGNmMWLBehsj2uxUrr-RlyJeS8";
+   // private static final String API_KEY = "AIzaSyA8nQ35LYyIYSQUiHXviYnKIu0QqV16Yxs";
+
     private TextView mTitle;
     private ImageView PlaceImage;
     private ImageButton addButton;
@@ -34,13 +36,9 @@ public class PlaceDetailActivity extends AppCompatActivity
 
         PlacesDetailsTask placesTask = new PlacesDetailsTask();
 
-        placesTask.execute("https://maps.googleapis.com/maps/api/place/details/json?" + "reference=" + reference + "&sensor=true" + "&key=" + API_KEY);
+        placesTask.execute("https://maps.googleapis.com/maps/api/place/details/json?" + "placeid=" + reference + "&sensor=true" + "&key=" + API_KEY);
 
         }
-
-
-
-
     }
 
 
