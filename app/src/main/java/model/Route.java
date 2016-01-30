@@ -1,6 +1,8 @@
 package model;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import HttpNetwork.NetworkHelper;
 
 /**
  * Created by AndySchluenz on 26.01.16.
@@ -8,19 +10,35 @@ import java.util.List;
 public class Route {
 
     private String Name;
-    private List<Place> places;
+
+
+
+    private ArrayList<Sight> sightsList;
     private String Id;
 
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    private String userid;
+
     public Route(String name) {
-        Name = name;
+        this.Name = name;
+        this.sightsList = new ArrayList<Sight>();
+        this.userid = User.getInstance().getUserId();
     }
 
     public void setName(String name) {
         Name = name;
     }
 
-    public void setPlaces(List<Place> places) {
-        this.places = places;
+    public void addPlace(String name, String placeId) {
+       Sight sight = new Sight(name,placeId);
+        sightsList.add(sight);
     }
 
     public void setId(String id) {
@@ -28,15 +46,12 @@ public class Route {
     }
 
     public String getName() {
-
         return Name;
     }
 
-    public List<Place> getPlaces() {
-        return places;
+    public ArrayList<Sight> getSightsList() {
+        return sightsList;
     }
 
-    public String getId() {
-        return Id;
-    }
+
 }

@@ -1,8 +1,10 @@
 package HttpNetwork;
 
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import AppLogic.GooglePlacesService;
 import model.Place;
+import sights.sights.R;
 
 /**
  * Created by AndySchluenz on 24.01.16.
@@ -59,7 +62,7 @@ public class GetPlacesAsyncForMap extends AsyncTask<Void,Void,List<Place>> {
         super.onPostExecute(places);
         for (Place place:places){
            newMarkerPos = new LatLng(place.getLatitude(),place.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(newMarkerPos).title(place.getName()).snippet(place.getId()));
+            mMap.addMarker(new MarkerOptions().position(newMarkerPos).title(place.getName()).snippet(place.getId()).icon(BitmapDescriptorFactory.fromResource(R.drawable.mapspin)));
     }
     }
 }

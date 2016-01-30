@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import AppLogic.Adapter.InfoWindowAdapterMarker;
+import AppLogic.PreferenceData;
 import AppLogic.RouteHandler;
 import AppLogic.Searchhelper;
 import HttpNetwork.GetPlacesAsyncForMap;
@@ -57,8 +59,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Context mContext;
 
     RouteHandler rh = new RouteHandler();
-
-
     private GoogleApiClient mGoogleApiClient;
 
         //Berlin
@@ -71,7 +71,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mContext = this;
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -109,6 +108,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //  Intent d = new Intent(MapsActivity.this,My);
                         currentSelectedPosition = 3;
                         return true;
+                    case R.id.navigation_item_5:
+                        logout();
+                        currentSelectedPosition = 4;
+                        return true;
                     default:
                         return true;
                 }
@@ -117,6 +120,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
+
+    }
+
+    private void logout() {
+
+
+        LoginManager.getInstance().logOut();
+        PreferenceData.clearLoggedInId(this);
+
+        Intent i = new Intent(this, Login.class);
+        startActivity(i);
 
     }
 
@@ -210,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void openCreateRouteDialog() {
+    public void openCreateRouteDialog() {
         LayoutInflater inflater = LayoutInflater.from(MapsActivity.this);
         View createRouteDialog  = inflater.inflate(R.layout.create_route_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);

@@ -1,11 +1,14 @@
 package HttpNetwork;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
 import okhttp3.Callback;
 import okhttp3.Headers;
@@ -27,8 +30,8 @@ import okhttp3.Response;
         if (count == 2) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("userToken", params[0]);
-                obj.put("userId", params[1]);
+                obj.put("accessToken", params[0]);
+               // obj.put("userId", params[1]);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -51,7 +54,9 @@ import okhttp3.Response;
                         System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
                     }
                     if(response.isSuccessful()) {
-                        String resp = response.body().toString();
+                        Reader is = response.body().charStream();
+
+                        Log.d("loginResponse: ", is.toString());
                     }
                 }
             });

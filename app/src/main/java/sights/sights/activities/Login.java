@@ -17,8 +17,10 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import AppLogic.PreferenceData;
 import HttpNetwork.LoginAsyncRunner;
 import HttpNetwork.NetworkHelper;
+import model.User;
 import sights.sights.R;
 
 public class Login extends Activity {
@@ -35,6 +37,8 @@ public class Login extends Activity {
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
+        checkforLoginStatus();
+
         logo = (ImageView) findViewById(R.id.logo);
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
@@ -47,6 +51,9 @@ public class Login extends Activity {
                 LoginAsyncRunner runner = new LoginAsyncRunner();
                 String usertoken = loginResult.getAccessToken().getToken();
                 String userid = loginResult.getAccessToken().getUserId();
+                PreferenceData.setPrefLoggedinUserId(getApplicationContext(),userid);
+                PreferenceData.setPrefUserLoggedinStatus(getApplicationContext(),true);
+                setUser();
                 runner.execute(usertoken,userid);
             }
 
@@ -62,6 +69,17 @@ public class Login extends Activity {
         });
     }
 
+    private void checkforLoginStatus() {
+        if(PreferenceData.getPrefUserLoggedinStatus(this) == false){
+            return;
+        }else{
+            setUser();
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -70,10 +88,11 @@ public class Login extends Activity {
     protected void goToMap(){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
-
     }
 
-
+    protected void setUser(){
+        User.getInstance().setUserId(PreferenceData.getPrefLoggedinUserId(this));
+    }
 
 }
 

@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/next_arrow"
 
-        android:layout_alignParentEnd="true"
         />
 
 
