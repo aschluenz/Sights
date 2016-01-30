@@ -3,6 +3,7 @@ package sights.sights.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -25,6 +26,7 @@ public class Login extends Activity {
     private TextView info;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
+    private ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public class Login extends Activity {
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
-       // info = (TextView)findViewById(R.id.info);
+        logo = (ImageView) findViewById(R.id.logo);
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {

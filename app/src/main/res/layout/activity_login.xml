@@ -7,7 +7,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/primary"
     tools:context=".activities.Login">
+
+
+    <android.support.v4.widget.CircleImageView
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/SightsLogo"
+        android:layout_marginTop="61dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+        </android.support.v4.widget.CircleImageView>
+
 
 
     <com.facebook.login.widget.LoginButton
