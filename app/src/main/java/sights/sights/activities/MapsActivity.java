@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -24,12 +25,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,9 +65,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RouteHandler rh = new RouteHandler();
     private GoogleApiClient mGoogleApiClient;
 
-        //Berlin
-    LatLng MapsPoint = new LatLng(52.5074588,13.2847137);
 
+    LatLng accualCameraPos = new LatLng(52.5074588, 13.2847137);
+    LatLng MapsPoint = accualCameraPos;
+
+    float zoomlevel = 16;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -120,7 +131,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void logout() {
@@ -149,13 +162,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new InfoWindowAdapterMarker(mContext));
 
-
         // Add a marker in Sydney and move the camera
-       // LatLng sydney = new LatLng(52.5072094, 13.1442686);
-        mMap.addMarker(new MarkerOptions().position(MapsPoint).title("Marker in Berlin"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(MapsPoint));
+        // LatLng sydney = new LatLng(52.5072094, 13.1442686);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(MapsPoint, 15));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        appMarker(zoomlevel);
 
-        appMarker();
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+                mMap.addMarker(new MarkerOptions().position(cameraPosition.target).title("Marker in Berlin"));
+
+
+                //TODO mMap.clear();
+                zoomlevel = mMap.getCameraPosition().zoom;
+                accualCameraPos = mMap.getCameraPosition().target;
+                String bla = new Float(zoomlevel).toString();
+                Log.d("Zoomlevel:", bla);
+                Log.d("accualCameraPosition: ", accualCameraPos.toString());
+                appMarker(zoomlevel);
+
+
+            }
+        });
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -166,20 +197,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra("reference", placeId);
 
                 startActivity(intent);
+
+
             }
+
+
         });
 
     }
 
+/*
+    private GoogleMap.OnCameraChangeListener onCameraChange() {
+        zoomlevel = mMap.getCameraPosition().zoom;
+        accualCameraPos = mMap.getCameraPosition().target;
+        String bla = new Float(zoomlevel).toString();
+        Log.d("Zoomlevel:", bla);
+        Log.d("accualCameraPosition: ", accualCameraPos.toString());
 
-
-
-    public void appMarker(){
-        new GetPlacesAsyncForMap(mMap,MapsPoint ,"museum").execute();
-
+        return null;
     }
 
+    */
 
+    public void appMarker(float zoom) {
+
+        new GetPlacesAsyncForMap(mMap, accualCameraPos,zoom, "museum").execute();
+
+    }
 
 
     public void setToolbar() {
@@ -189,8 +233,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setUpNavigationDrawer(){
-        if(toolbar != null) {
+    private void setUpNavigationDrawer() {
+        if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationIcon(R.drawable.ic_menu);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -204,8 +248,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
@@ -213,9 +257,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    private void setFab(){
+    private void setFab() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        if(fab != null){
+        if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     openCreateRouteDialog();
@@ -226,7 +270,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void openCreateRouteDialog() {
         LayoutInflater inflater = LayoutInflater.from(MapsActivity.this);
-        View createRouteDialog  = inflater.inflate(R.layout.create_route_dialog, null);
+        View createRouteDialog = inflater.inflate(R.layout.create_route_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MapsActivity.this);
         alertDialogBuilder.setView(createRouteDialog);
 
@@ -235,12 +279,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //setup dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                boolean result =  rh.createRoute(routeName.getText().toString());
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean result = rh.createRoute(routeName.getText().toString());
 
-                }
-            })
+                    }
+                })
                 .setNegativeButton("Chancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -253,10 +297,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    protected void handleSearch(){
+    protected void handleSearch() {
         ActionBar ab = getSupportActionBar();
 
-        if(isSearchOpened){
+        if (isSearchOpened) {
             ab.setDisplayShowCustomEnabled(false);
             ab.setDisplayShowTitleEnabled(true);
 
@@ -264,16 +308,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
 
 
-        }else {//open the search entry
+        } else {//open the search entry
             ab.setDisplayShowCustomEnabled(true);
             ab.setCustomView(R.layout.search_bar);
             ab.setDisplayShowTitleEnabled(false);
 
-            edtSearch= (EditText) ab.getCustomView().findViewById(R.id.edtSearch);
+            edtSearch = (EditText) ab.getCustomView().findViewById(R.id.edtSearch);
 
-            edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                    if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         doSearch(edtSearch.getText().toString());
                         return true;
                     }
@@ -302,21 +346,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onBackPressed(){
-        if(isSearchOpened){
+    public void onBackPressed() {
+        if (isSearchOpened) {
             handleSearch();
             return;
         }
         super.onBackPressed();
     }
 
-    private void UpdateCamera(LatLng newLatLng){
-    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLatLng, 15);
+    private void UpdateCamera(LatLng newLatLng) {
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLatLng, 15);
         mMap.addMarker(new MarkerOptions().position(newLatLng).title("You are here"));
         mMap.animateCamera(update);
     }
-
-
 
 
 
