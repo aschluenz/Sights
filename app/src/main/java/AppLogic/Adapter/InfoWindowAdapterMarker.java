@@ -42,9 +42,9 @@ public class InfoWindowAdapterMarker implements GoogleMap.InfoWindowAdapter {
 
         TextView title = (TextView) mContentsView.findViewById(R.id.title_infowindow);
         TextView hiddenmarkerid = (TextView) mContentsView.findViewById(R.id.snippet_infowindow);
-        ImageView imageView = (ImageView) mContentsView.findViewById(R.id.image_infowindow);
+        //ImageView imageView = (ImageView) mContentsView.findViewById(R.id.image_infowindow);
 
-        Glide.with(mContext).load(R.drawable.next_arrow).into(imageView);
+       // Glide.with(mContext).load(R.drawable.next_arrow).into(imageView);
 
         title.setText(marker.getTitle());
         hiddenmarkerid.setText(marker.getSnippet());

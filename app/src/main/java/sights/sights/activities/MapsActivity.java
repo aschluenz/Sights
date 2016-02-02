@@ -1,14 +1,19 @@
 package sights.sights.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -48,6 +54,8 @@ import sights.sights.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+
+    protected LocationManager locationManager;
 
     private EditText edtSearch;
     private boolean isSearchOpened = false;
@@ -221,7 +229,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void appMarker(float zoom) {
 
-        new GetPlacesAsyncForMap(mMap, accualCameraPos,zoom, "museum").execute();
+        new GetPlacesAsyncForMap(mMap, accualCameraPos, zoom, "museum").execute();
 
     }
 
@@ -232,6 +240,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             setSupportActionBar(toolbar);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
 
     private void setUpNavigationDrawer() {
         if (toolbar != null) {
@@ -252,6 +268,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_search:
+                handleSearch();
+                return true;
+
+            case R.id.action_find_location:
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -298,7 +320,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     protected void handleSearch() {
-        ActionBar ab = getSupportActionBar();
+        final ActionBar ab = getSupportActionBar();
 
         if (isSearchOpened) {
             ab.setDisplayShowCustomEnabled(false);
@@ -319,6 +341,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         doSearch(edtSearch.getText().toString());
+                        ab.setDisplayShowCustomEnabled(false);
                         return true;
                     }
                     return false;
@@ -327,6 +350,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             edtSearch.requestFocus();
 
             //Open Keyboard
+
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(edtSearch, InputMethodManager.SHOW_IMPLICIT);
 
@@ -337,6 +361,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void doSearch(String SearchTerm) {
 
+
+        edtSearch.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+
         Searchhelper sh = new Searchhelper();
         LatLng newLatLng = null;
         newLatLng = sh.determineLatLngFromAdress(this, SearchTerm);
@@ -345,15 +374,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (isSearchOpened) {
-            handleSearch();
-            return;
-        }
-        super.onBackPressed();
-    }
+    /* @Override
+     public void onBackPressed() {
 
+         }
+         super.onBackPressed();
+     }
+ */
     private void UpdateCamera(LatLng newLatLng) {
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLatLng, 15);
         mMap.addMarker(new MarkerOptions().position(newLatLng).title("You are here"));
@@ -361,6 +388,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    protected void showCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location != null){
+            MapsPoint = new LatLng(location.getLatitude(),location.getLongitude());
+        }
 
-}
+    }
+
+
+
+    }
 
