@@ -9,10 +9,9 @@
             android:title="Places List" />
         <item
             android:id="@+id/navigation_item_2"
-            android:title="Profile" />
+            android:title="add Sight" />
 
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
-
         <item
             android:id="@+id/navigation_item_3"
             android:title="My Routes" />

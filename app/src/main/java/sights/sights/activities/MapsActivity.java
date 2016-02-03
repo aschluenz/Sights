@@ -110,11 +110,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_item_1:
                         Intent a = new Intent(MapsActivity.this, PlacesListActivity.class);
+                        Log.d("accualCamera Lat", String.valueOf(accualCameraPos.latitude));
+                        
+                        
+                        a.putExtra("lat",  String.valueOf(accualCameraPos.latitude));
+                        a.putExtra("lng", String.valueOf(accualCameraPos.longitude));
                         startActivity(a);
+
                         currentSelectedPosition = 0;
                         return true;
                     case R.id.navigation_item_2:
-                        Intent b = new Intent(MapsActivity.this, ProfileActivity.class);
+                        Intent b = new Intent(MapsActivity.this, AddSightActivity.class);
                         startActivity(b);
                         currentSelectedPosition = 1;
                         return true;
@@ -274,6 +280,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
 
             case R.id.action_find_location:
+                showCurrentLocation();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -12,8 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
-
+    <uses-feature android:name="android.hardware.camera" android:required="false"></uses-feature>
 
     <application
         android:allowBackup="true"
@@ -35,13 +34,12 @@
         <!-- End Facebook Stuff -->
 
         <activity android:name=".activities.Login">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -57,9 +55,7 @@
 
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps">
-
-        </activity>
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -69,12 +65,23 @@
             android:name=".activities.PlacesListActivity"
             android:label="@string/title_activity_places_list"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".activities.PlaceDetailActivity"></activity>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".activities.PlaceDetailActivity" />
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activities.RouteDetailsActivity"
+            android:label="@string/title_activity_route_details"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.AddSightActivity"
+            android:label="@string/title_activity_add_sight"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -29,15 +29,14 @@ import sights.sights.R;
  */
 public class RouteHandler {
 
-    public AsyncResponse delegate = null;
-
-
     private  Context context;
 
     private String url = "http://nodejs-sightsapp.rhcloud.com/route/";
 
     //holdes all route objects local;
     public static List<Route> routes = new ArrayList<Route>();
+
+    public static HashMap<String, String> routesByName = new HashMap<String, String>();
 
     public boolean createRoute(String routeName)  {
         Route route = new Route(routeName);
@@ -117,16 +116,10 @@ public class RouteHandler {
     }
 
 
-
-
-    public void getAllRouteFromUser(String UserId) throws JSONException {
-
-
+    public HashMap<String,String> getAllRouteFromUser(String UserId) throws JSONException {
         String _url =  "http://nodejs-sightsapp.rhcloud.com/route/get";
-
         JSONObject useridObj = new JSONObject();
         useridObj.put("userID", UserId);
-
         NetworkHelper nh = new NetworkHelper();
         nh.post(_url, useridObj.toString(), new Callback() {
                     @Override
@@ -140,15 +133,21 @@ public class RouteHandler {
                             String res = response.body().string();
                             Log.d("all routes response: ", res);
                             try {
-                                delegate.prozessFinish(res);
-                            } catch (JSONException e) {
+                             //   JSONObject job = new JSONObject(res);
+                                JSONArray jsonArray = new JSONArray(res);
+                                for(int i=0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonRoute = (JSONObject) jsonArray.get(i);
+                                    Log.d("jsonRoute Object: ", jsonRoute.toString());
+                                    routesByName.put(jsonRoute.getString("title"), jsonRoute.getString("routeID"));
+                                }
+                                } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 }
         );
-
+      return routesByName;
     }
 
 }

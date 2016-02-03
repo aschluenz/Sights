@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -25,14 +26,16 @@ public class GetPlacesAsyncRunner extends AsyncTask<Void, Void, Void> {
     private String[] placeName;
     private String[] imageUrl;
     private ListView  listView;
+    private LatLng location;
 
     public GetPlacesAsyncRunner(){
 
     };
 
-    public GetPlacesAsyncRunner(Context context, ListView listView){
+    public GetPlacesAsyncRunner(Context context, ListView listView, LatLng location){
         this.context = context;
         this.listView = listView;
+        this.location =location;
 
     }
     @Override
@@ -59,7 +62,7 @@ public class GetPlacesAsyncRunner extends AsyncTask<Void, Void, Void> {
 
 
         GooglePlacesService service = new GooglePlacesService();
-        List<Place> findPlaces = service.findPlaces(52.5074588,13.2847137,1600, "museum");
+        List<Place> findPlaces = service.findPlaces(location.latitude,location.longitude,5000, "museum");
 
         placeName = new String[findPlaces.size()];
         imageUrl = new String[findPlaces.size()];

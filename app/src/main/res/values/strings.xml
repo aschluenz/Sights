@@ -22,5 +22,8 @@
     <string name="action_find_location">Find</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_places_list">PlacesListActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_route_details">RouteDetailsActivity</string>
+    <string name="title_activity_add_sight">AddSightActivity</string>
 
 </resources>
