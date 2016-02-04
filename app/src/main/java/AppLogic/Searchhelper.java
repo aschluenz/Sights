@@ -15,15 +15,15 @@ import java.util.Locale;
 public class Searchhelper {
 
 
-    public LatLng determineLatLngFromAdress(Context AppContext,  String strAdress){
+    public LatLng determineLatLngFromAdress(Context AppContext,  String strAddress){
         LatLng latLng = null;
         Geocoder geocoder = new Geocoder(AppContext, Locale.getDefault());
         List<Address> geoResults = null;
 
         try{
-            geoResults = geocoder.getFromLocationName(strAdress, 1);
+            geoResults = geocoder.getFromLocationName(strAddress, 1);
             while (geoResults.size() == 0){
-                geoResults = geocoder.getFromLocationName(strAdress, 1);
+                geoResults = geocoder.getFromLocationName(strAddress, 1);
             }
             if (geoResults.size()>0) {
                 Address addr = geoResults.get(0);
