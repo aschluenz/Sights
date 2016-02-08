@@ -1,5 +1,6 @@
 package sights.sights.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,9 +21,12 @@ import sights.sights.R;
 
 public class AddSightActivity extends AppCompatActivity {
 
+
+    Context mContext;
+
     private static final int CAMERA_REQUEST = 1888;
 
-    String userID = "abc";  //PreferenceData.getPrefLoggedinUserId(getApplicationContext());
+    String userID ;
 
     EditText sTitle;
     EditText sAddress;
@@ -37,6 +41,8 @@ public class AddSightActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_sight);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("add new Sight");
+        mContext=this;
+        userID = PreferenceData.getPrefLoggedinUserId(mContext);
 
         sTitle = (EditText) findViewById(R.id.input_Title);
         sAddress = (EditText) findViewById(R.id.input_adress);

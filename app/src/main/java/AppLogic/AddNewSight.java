@@ -25,7 +25,7 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
 
 
 
-    String url = "http://nodejs-sightsapp.rhcloud.com/sight/";
+    String url = "http://nodejs-sightsapp.rhcloud.com/sight/add";
 
     @Override
     protected Void doInBackground(String... params) {
@@ -42,11 +42,11 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
         JSONObject jo = new JSONObject();
         try {
             jo.put("title", strTitle);
-            jo.put("discription",strDiscription);
+            jo.put("describtion",strDiscription);
             jo.put("website", strWebsite);
             jo.put("userID", userID);
-            jo.put("lat", strLat);
-            jo.put("lng", strLng);
+            jo.put("latitude", strLat);
+            jo.put("longitude", strLng);
         }catch (JSONException j){
             Log.d("Jsonerror: ", j.getMessage());
         }

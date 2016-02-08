@@ -1,10 +1,13 @@
 package sights.sights.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import AppLogic.AsyncResponse;
 import AppLogic.PreferenceData;
@@ -37,33 +41,42 @@ public class MyRoutesActivity extends AppCompatActivity {
     public Route myroute = new Route("Basti wird irre");
     public Route myroute1 = new Route("Andy ist irre");
 
+    private Intent i;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_routes);
 
+        i = new Intent(this,RouteDetailsActivity.class);
+
 
         new ListAsynctask().execute();
 
         myRoutes = (ListView) findViewById(R.id.myRoutesLists);
 
-        //final ArrayList<String> list = new ArrayList<>();
-       // list.add(myroute.getName());
-       // list.add(myroute1.getName());
+
+        myRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object obj = myRoutes.getItemAtPosition(position);
+
+
+                String routeid = routesByName.get(obj);
+
+                i.putExtra("routeID", routeid);
+                startActivity(i);
+
+                Log.d("clicked item",obj.toString());
+                Log.d("clicked item routeid",routeid);
+
+            }
+        });
 
 
 
 
-      /*  RouteHandler rh = new RouteHandler();
-        rh.delegate = this;
-        try {
-            rh.getAllRouteFromUser(PreferenceData.getPrefLoggedinUserId(getBaseContext()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        */
 
 
     }

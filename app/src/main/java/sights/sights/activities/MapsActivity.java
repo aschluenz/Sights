@@ -112,32 +112,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.navigation_item_1:
                         Intent a = new Intent(MapsActivity.this, PlacesListActivity.class);
                         Log.d("accualCamera Lat", String.valueOf(accualCameraPos.latitude));
-                        
-                        
-                        a.putExtra("lat",  String.valueOf(accualCameraPos.latitude));
+
+                        a.putExtra("lat", String.valueOf(accualCameraPos.latitude));
                         a.putExtra("lng", String.valueOf(accualCameraPos.longitude));
                         startActivity(a);
-
                         currentSelectedPosition = 0;
+                        drawerLayout.closeDrawers();
                         return true;
                     case R.id.navigation_item_2:
                         Intent b = new Intent(MapsActivity.this, AddSightActivity.class);
                         startActivity(b);
                         currentSelectedPosition = 1;
+                        drawerLayout.closeDrawers();
                         return true;
                     case R.id.navigation_item_3:
                         Intent c = new Intent(MapsActivity.this, MyRoutesActivity.class);
                         startActivity(c);
                         currentSelectedPosition = 2;
+                        drawerLayout.closeDrawers();
                         return true;
                     case R.id.navigation_item_4:
                         //  Intent d = new Intent(MapsActivity.this,My);
                         currentSelectedPosition = 3;
+                        drawerLayout.closeDrawers();
                         return true;
+
                     case R.id.navigation_item_5:
                         logout();
                         currentSelectedPosition = 4;
+                        drawerLayout.closeDrawers();
                         return true;
+
                     default:
                         return true;
                 }

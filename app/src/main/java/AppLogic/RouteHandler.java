@@ -29,7 +29,7 @@ import sights.sights.R;
  */
 public class RouteHandler {
 
-    private  Context context;
+    //private  Context context;
 
     private String url = "http://nodejs-sightsapp.rhcloud.com/route/";
 
@@ -37,6 +37,9 @@ public class RouteHandler {
     public static List<Route> routes = new ArrayList<Route>();
 
     public static HashMap<String, String> routesByName = new HashMap<String, String>();
+
+    public static Route oneRouteByID;
+
 
     public boolean createRoute(String routeName)  {
         Route route = new Route(routeName);
@@ -52,8 +55,33 @@ public class RouteHandler {
 
 
 
-    public void getRoute(String id){
+    public Route getRoute(String id) throws JSONException {
+        String _url = url + "get";
 
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("routeID", id);
+
+        NetworkHelper nh = new NetworkHelper();
+        nh.post(url, jsonObject.toString(), new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d("getRouteById exception", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+
+
+
+                } else {
+                    Log.d("getRouteById response error: ", response.message());
+                }
+            }
+        });
+
+
+        return oneRouteByID;
     };
 
     public static void getRouteByName(String RouteName,String SightId, String SightName){
@@ -68,9 +96,14 @@ public class RouteHandler {
 
     }
 
-    public void getAllRoutes(String userid){
+
+   /* public void getAllRoutes(String userid){
+        String _url = url + "get";
+
 
     };
+
+    */
 
     public static String[] getAllRouteName(){
         int routenum = routes.size();
@@ -84,7 +117,7 @@ public class RouteHandler {
     }
 
     public void saveRoute(Route route) throws JSONException {
-        String _url = url + "http://nodejs-sightsapp.rhcloud.com/route/add";
+        String _url = url + "add";
 
         JSONArray jsonArray = new JSONArray();
         JSONArray sightArray = new JSONArray(route.getSightsList());
@@ -101,20 +134,41 @@ public class RouteHandler {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.d("Save Route exection", e.getMessage());
-
             }
+
             @Override
             public void onResponse(Response response) throws IOException {
                if(response.isSuccessful()){
                    String res = response.body().string();
                    Log.d("Save Route response: ", res);
-                   //TODO get RouteID out of the JsonString
-                }else {
+                   //TODO RouteId rausholen
+                   try {
+                       String routeId = new JSONObject(res).getJSONObject("routeObject").getString("routeID");
+                       String routeName = new JSONObject(res).getJSONObject("routeObject").getString("title");
+                       addRouteiD(routeId, routeName);
+
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
+               }else {
+                   String res = response.body().string();
+                   Log.d("Save Route failed: ", res);
                }
             }
         });
     }
 
+    private void addRouteiD(String routeId, String Name) {
+        for(int i = 0; i< routes.size(); i++){
+            Route route = routes.get(i);
+            if(route.getName().equals(Name)){
+                route.setId(routeId);
+                routes.add(i, route);
+                Log.d("gesetzte RouteID:", routes.get(i).getId());
+                break;
+            }
+        }
+    }
 
     public HashMap<String,String> getAllRouteFromUser(String UserId) throws JSONException {
         String _url =  "http://nodejs-sightsapp.rhcloud.com/route/get";
