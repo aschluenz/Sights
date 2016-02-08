@@ -20,9 +20,7 @@ import okhttp3.Response;
 /**
  * Created by andyschlunz on 04.02.16.
  */
-public class AddNewSight extends AsyncTask<String,Void,Void> {
-
-
+public class AddNewSight extends AsyncTask<String, Void, Void> {
 
 
     String url = "http://nodejs-sightsapp.rhcloud.com/sight/add";
@@ -31,7 +29,7 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
     protected Void doInBackground(String... params) {
         String strTitle = params[0];
         String strLat = params[1];
-        String strLng  = params[2];
+        String strLng = params[2];
         String strDiscription = params[3];
         String strWebsite = params[4];
         String userID = params[5];
@@ -42,12 +40,12 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
         JSONObject jo = new JSONObject();
         try {
             jo.put("title", strTitle);
-            jo.put("describtion",strDiscription);
+            jo.put("describtion", strDiscription);
             jo.put("website", strWebsite);
             jo.put("userID", userID);
             jo.put("latitude", strLat);
             jo.put("longitude", strLng);
-        }catch (JSONException j){
+        } catch (JSONException j) {
             Log.d("Jsonerror: ", j.getMessage());
         }
         String json = jo.toString();
@@ -62,7 +60,7 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Log.d("New Sight saved...", response.message());
                 }
             }

@@ -1,5 +1,7 @@
 package model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 import HttpNetwork.NetworkHelper;
@@ -41,8 +43,15 @@ public class Route {
         Name = name;
     }
 
+    public void addPlace(String name, String placeId, double lat, double lng) {
+        Sight sight = new Sight(name,placeId);
+        sight.setLatitude(lat);
+        sight.setLongitude(lng);
+        sightsList.add(sight);
+    }
+
     public void addPlace(String name, String placeId) {
-       Sight sight = new Sight(name,placeId);
+        Sight sight = new Sight(name,placeId);
         sightsList.add(sight);
     }
 

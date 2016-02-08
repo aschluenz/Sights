@@ -6,6 +6,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,12 +15,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import HttpNetwork.NetworkHelper;
 import model.Place;
 import model.Route;
+import model.Sight;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -55,8 +59,8 @@ public class RouteHandler {
 
 
 
-    public Route getRoute(String id) throws JSONException {
-        String _url = url + "get";
+   public Route getRoute(String id)   {
+       /* String _url = url + "get";
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("routeID", id);
@@ -71,20 +75,20 @@ public class RouteHandler {
             @Override
             public void onResponse(Response response) throws IOException {
                 if (response.isSuccessful()) {
-
-
+                    response
+                    return oneRouteByID;
 
                 } else {
-                    Log.d("getRouteById response error: ", response.message());
+                    Log.d("getRouteById resp err: ", response.message());
                 }
             }
         });
 
-
-        return oneRouteByID;
+*/
+return null;
     };
 
-    public static void getRouteByName(String RouteName,String SightId, String SightName){
+    public static void addSightToRouteByRouteName(String RouteName, String SightId, String SightName,double lat,double lng){
         int result = 0;
         for(int i = 0; i < routes.size(); i++){
             if (routes.get(i).getName().equals(RouteName)){
@@ -92,7 +96,9 @@ public class RouteHandler {
               break;
             }
         }
-        routes.get(result).addPlace(SightName,SightId);
+        routes.get(result).addPlace(SightName,SightId, lat, lng);
+
+        updateRouteToServer(routes.get(result));
 
     }
 
@@ -201,7 +207,58 @@ public class RouteHandler {
                     }
                 }
         );
+
       return routesByName;
     }
+
+
+    public static void updateRouteToServer(Route route) {
+        String _url =  "http://nodejs-sightsapp.rhcloud.com/route/update";
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        for(int i= 0; i<route.getSightsList().size();i++){
+            Sight sight =route.getSightsList().get(i);
+            JSONObject sightJSON = new JSONObject();
+            try {
+                sightJSON.put("placeID", sight.getPlaceID());
+                sightJSON.put("name", sight.getName());
+                sightJSON.put("latitude", sight.getLatitude());
+                sightJSON.put("longitude", sight.getLongitude());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            array.put(sightJSON);
+        }
+
+        try {
+
+            jsonObject.put("routeID", route.getId());
+            jsonObject.put("title", route.getName());
+            jsonObject.put("userID", route.getUserid());
+            jsonObject.put("sights", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        NetworkHelper nh = new NetworkHelper();
+        nh.post(_url, jsonObject.toString(), new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d("added sight failed:", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(response.isSuccessful());
+                Log.d("added sight:", response.message());
+
+            }
+        });
+
+
+    }
+
+
 
 }

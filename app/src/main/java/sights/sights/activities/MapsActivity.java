@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -44,6 +45,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
 
 import AppLogic.Adapter.InfoWindowAdapterMarker;
 import AppLogic.PreferenceData;
@@ -101,6 +104,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
 
+        new getUserRoutes().execute(PreferenceData.getPrefLoggedinUserId(getBaseContext()));
+
         setFab();
         setUpNavigationDrawer();
 
@@ -155,6 +160,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
+
 
     private void logout() {
 
@@ -424,6 +431,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
+
+    public class getUserRoutes extends AsyncTask<String,Void, Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+            RouteHandler rh = new RouteHandler();
+            try {
+                Log.d("params:", params[0]);
+                rh.getAllRouteFromUser(params[0]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+
+
+        }
+    }
 
 
     }

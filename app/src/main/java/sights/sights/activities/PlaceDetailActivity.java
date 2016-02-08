@@ -2,7 +2,6 @@ package sights.sights.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,21 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import AppLogic.AsyncResponse;
 import AppLogic.RouteHandler;
@@ -40,6 +36,10 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
     private TextView mTitle;
     private TextView mAddress;
     private TextView mWebsite;
+
+    private double lat;
+    private double lng;
+
 
     private ImageView PlaceImage;
     private ImageButton addButton;
@@ -102,7 +102,8 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
         Log.d("Interface output:", output);
         JSONObject job = new JSONObject(output);
         JSONObject result = job.getJSONObject("result");
-
+        lat = result.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+        lng = result.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
 
         mTitle.setText(result.getString("name"));
         mAddress.setText(result.getString("formatted_address"));
@@ -110,7 +111,9 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
         mWebsite.setMovementMethod(LinkMovementMethod.getInstance());
 
 
+
     }
+
 
     public void chooseRouteDialog(){
         LayoutInflater inflater = LayoutInflater.from(PlaceDetailActivity.this);
@@ -129,9 +132,9 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       RouteHandler.getRouteByName(DialogSpinner.getSelectedItem().toString(),reference, (String) mTitle.getText());
+                       RouteHandler.addSightToRouteByRouteName(DialogSpinner.getSelectedItem().toString(), reference, (String) mTitle.getText(),lat,lng);
                         Toast.makeText(PlaceDetailActivity.this, "Place added!", Toast.LENGTH_LONG).show();
-                        startActivity(getParentActivityIntent());
+//                        startActivity(getParentActivityIntent());
                     }
                 });
 
