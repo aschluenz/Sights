@@ -36,6 +36,8 @@ public class AddNewSight extends AsyncTask<String,Void,Void> {
         String strWebsite = params[4];
         String userID = params[5];
 
+        //TODO check json creating for backend
+
         //create json
         JSONObject jo = new JSONObject();
         try {

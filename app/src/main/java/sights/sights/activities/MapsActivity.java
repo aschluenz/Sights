@@ -34,6 +34,7 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -406,9 +407,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
         if(location != null){
             MapsPoint = new LatLng(location.getLatitude(),location.getLongitude());
+        }else{
+            MapsPoint = new LatLng(52.520645,13.409779);
         }
 
     }

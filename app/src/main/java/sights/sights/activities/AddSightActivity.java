@@ -22,7 +22,7 @@ public class AddSightActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
 
-    String userID = PreferenceData.getPrefLoggedinUserId(this);
+    String userID = "abc";  //PreferenceData.getPrefLoggedinUserId(getApplicationContext());
 
     EditText sTitle;
     EditText sAddress;
