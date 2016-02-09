@@ -33,8 +33,6 @@ import sights.sights.R;
  */
 public class RouteHandler {
 
-    //private  Context context;
-
     private String url = "http://nodejs-sightsapp.rhcloud.com/route/";
 
     //holdes all route objects local;
@@ -89,6 +87,15 @@ return null;
     };
 
     public static void addSightToRouteByRouteName(String RouteName, String SightId, String SightName,double lat,double lng){
+        // hole mir dir route id
+        String Routeid = routesByName.get(RouteName);
+        Route route = new Route(RouteName,Routeid);
+        route.addPlace(SightName,SightId,lat,lng);
+
+        updateRouteToServer(route);
+
+
+        /*
         int result = 0;
         for(int i = 0; i < routes.size(); i++){
             if (routes.get(i).getName().equals(RouteName)){
@@ -96,10 +103,12 @@ return null;
               break;
             }
         }
+
+
         routes.get(result).addPlace(SightName,SightId, lat, lng);
 
         updateRouteToServer(routes.get(result));
-
+        */
     }
 
 
@@ -111,6 +120,8 @@ return null;
 
     */
 
+    /*
+
     public static String[] getAllRouteName(){
         int routenum = routes.size();
         String[] routenames = new String[routenum];
@@ -121,6 +132,20 @@ return null;
         }
         return routenames;
     }
+    */
+
+    public static String[] getRoutesfromList(){
+        int routenum = routesByName.size();
+        String[] routesList = new String[routenum];
+        int i = 0;
+        for (String key:routesByName.keySet()){
+            routesList[i] = key;
+            i++;
+        }
+
+        return routesList;
+    }
+
 
     public void saveRoute(Route route) throws JSONException {
         String _url = url + "add";
@@ -259,6 +284,64 @@ return null;
 
     }
 
+    public HashMap<String, String> getAllRoutes() {
+        // Struktur = ID : Name
+        HashMap<String, String> allRoutes = new HashMap<>();
+
+        String _url =  "http://nodejs-sightsapp.rhcloud.com/route/all";
+
+        //get
+        NetworkHelper nh = new NetworkHelper();
+        nh.get(_url, new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d("getallRoutes:", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(response.isSuccessful()){
+
+                }
+            }
+        });
 
 
+        return allRoutes;
+    }
+
+    public HashMap<String, String> getAllSightsByUserId(String UserID) {
+        String _url =  "http://nodejs-sightsapp.rhcloud.com/sight/get";
+
+        // Struktur = ID : Name
+        HashMap<String, String> allSightsfromUser = new HashMap<>();
+
+        JSONObject useridObj = new JSONObject();
+        try {
+            useridObj.put("userID", UserID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        NetworkHelper nh = new NetworkHelper();
+
+        nh.post(_url, useridObj.toString(), new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d("allSightsFromUser:", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(response.isSuccessful()){
+
+                }
+            }
+        });
+
+        //post
+
+
+        return allSightsfromUser;
+    }
 }

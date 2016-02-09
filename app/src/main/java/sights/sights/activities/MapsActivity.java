@@ -137,7 +137,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         drawerLayout.closeDrawers();
                         return true;
                     case R.id.navigation_item_4:
-                        //  Intent d = new Intent(MapsActivity.this,My);
+                          Intent d = new Intent(MapsActivity.this,MySightsActivity.class);
+                        startActivity(d);
                         currentSelectedPosition = 3;
                         drawerLayout.closeDrawers();
                         return true;
@@ -147,7 +148,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         currentSelectedPosition = 4;
                         drawerLayout.closeDrawers();
                         return true;
-
+                    case R.id.navigation_item_6:
+                        Intent i6 = new Intent(MapsActivity.this, SuggestedActivity.class);
+                        startActivity(i6);
+                        currentSelectedPosition = 5;
+                        drawerLayout.closeDrawers();
+                        return true;
                     default:
                         return true;
                 }
@@ -155,9 +161,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 

@@ -31,7 +31,6 @@ import sights.sights.R;
 public class PlaceDetailActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String API_KEY = "AIzaSyBV64nPqzGNmMWLBehsj2uxUrr-RlyJeS8";
-    // private static final String API_KEY = "AIzaSyA8nQ35LYyIYSQUiHXviYnKIu0QqV16Yxs";
 
     private TextView mTitle;
     private TextView mAddress;
@@ -81,14 +80,11 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int routeSize = RouteHandler.routes.size();
+                int routeSize = RouteHandler.routesByName.size();
                 if (routeSize == 0) {
                     Toast.makeText(PlaceDetailActivity.this,"Create a Route first!!!",Toast.LENGTH_LONG).show();
                 }
-                if (routeSize == 1) {
-                    RouteHandler.routes.get(0).addPlace(reference, (String) mTitle.getText());
-                    Toast.makeText(PlaceDetailActivity.this, "Place added!", Toast.LENGTH_LONG).show();
-                } else {
+                else {
                     chooseRouteDialog();
                 }
 
@@ -123,9 +119,8 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
         alertDialogBuilder.setView(chooseRouteDialog);
 
         final Spinner DialogSpinner = (Spinner) chooseRouteDialog.findViewById(R.id.chooseRouteSpinner);
-        ArrayAdapter adapter = new ArrayAdapter(this ,R.layout.support_simple_spinner_dropdown_item, RouteHandler.getAllRouteName());
+        ArrayAdapter adapter = new ArrayAdapter(this ,R.layout.support_simple_spinner_dropdown_item, RouteHandler.getRoutesfromList());
         DialogSpinner.setAdapter(adapter);
-
 
         //setup dialog window
         alertDialogBuilder.setCancelable(true)
@@ -134,7 +129,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements AsyncRespo
                     public void onClick(DialogInterface dialog, int which) {
                        RouteHandler.addSightToRouteByRouteName(DialogSpinner.getSelectedItem().toString(), reference, (String) mTitle.getText(),lat,lng);
                         Toast.makeText(PlaceDetailActivity.this, "Place added!", Toast.LENGTH_LONG).show();
-//                        startActivity(getParentActivityIntent());
                     }
                 });
 

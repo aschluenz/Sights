@@ -25,5 +25,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_route_details">RouteDetailsActivity</string>
     <string name="title_activity_add_sight">AddSightActivity</string>
+    <string name="title_activity_suggested">SuggestedActivity</string>
+    <string name="title_activity_my_sights">MySightsActivity</string>
+    <string name="title_activity_comments">CommentsActivity</string>
 
 </resources>

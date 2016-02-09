@@ -27,6 +27,9 @@
             android:id="@+id/navigation_item_5"
             android:title="Logout"
             />
+        <item android:id="@+id/navigation_item_6"
+            android:title="suggested Routes"
+            />
         <!--android:icon="@drawable/ic_action_location_found_dark"-->
     </group>
 

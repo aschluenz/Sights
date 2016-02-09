@@ -1,10 +1,14 @@
 package sights.sights.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -41,9 +45,6 @@ public class RouteDetailsActivity extends AppCompatActivity implements OnMapRead
     LatLng point_1 = new LatLng(40.712784, -74.005941);
     LatLng point_2 = new LatLng(52.520007,13.404954);
 
-
-    //Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,21 @@ public class RouteDetailsActivity extends AppCompatActivity implements OnMapRead
         setSupportActionBar(toolbar);
 
         new SightsfromRoute().execute();
+
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RouteDetailsActivity.this, CommentsActivity.class);
+                // bool
+                i.putExtra("isSight", false);
+                // id
+                i.putExtra("id",routeID);
+                startActivity(i);
+            }
+        });
 
     }
 

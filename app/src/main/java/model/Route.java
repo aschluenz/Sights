@@ -12,11 +12,9 @@ import HttpNetwork.NetworkHelper;
 public class Route {
 
     private String Name;
-
-
-
     private ArrayList<Sight> sightsList;
     private String Id;
+    private String userid;
 
     public String getUserid() {
         return userid;
@@ -31,12 +29,19 @@ public class Route {
 
     }
 
-    private String userid;
+
 
     public Route(String name) {
         this.Name = name;
         this.sightsList = new ArrayList<Sight>();
         this.userid = User.getInstance().getUserId();
+    }
+
+    public Route(String Name, String ID){
+        this.Name = Name;
+        this.sightsList = new ArrayList<Sight>();
+        this.userid = User.getInstance().getUserId();
+        this.Id = ID;
     }
 
     public void setName(String name) {

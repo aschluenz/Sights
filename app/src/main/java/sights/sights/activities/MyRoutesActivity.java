@@ -38,9 +38,6 @@ public class MyRoutesActivity extends AppCompatActivity {
 
     HashMap<String, String> routesByName = null;
 
-    public Route myroute = new Route("Basti wird irre");
-    public Route myroute1 = new Route("Andy ist irre");
-
     private Intent i;
 
 
@@ -51,11 +48,9 @@ public class MyRoutesActivity extends AppCompatActivity {
 
         i = new Intent(this,RouteDetailsActivity.class);
 
-
         new ListAsynctask().execute();
 
         myRoutes = (ListView) findViewById(R.id.myRoutesLists);
-
 
         myRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,11 +68,6 @@ public class MyRoutesActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
 
     }
 
