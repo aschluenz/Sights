@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -39,11 +42,9 @@ public class RouteDetailsActivity extends AppCompatActivity implements OnMapRead
     private String routeID;
     private ListView sightslist;
     private  PolylineOptions sightsLine;
+    private boolean isSavable;
 
     private ArrayList<String> namesSights;
-
-    LatLng point_1 = new LatLng(40.712784, -74.005941);
-    LatLng point_2 = new LatLng(52.520007,13.404954);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,26 @@ public class RouteDetailsActivity extends AppCompatActivity implements OnMapRead
         setSupportActionBar(toolbar);
 
         new SightsfromRoute().execute();
+
+
+        isSavable = getIntent().getBooleanExtra("isSavable",false);
+
+        if(isSavable == true){
+            Button myButton = new Button(this);
+            myButton.setText("Add to my Routes");
+            LinearLayout ll = (LinearLayout)findViewById(R.id.routesdetailsLinear);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+            ll.addView(myButton, lp);
+
+            myButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
+        }
+
 
 
 

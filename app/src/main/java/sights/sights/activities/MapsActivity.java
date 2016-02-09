@@ -58,7 +58,6 @@ import sights.sights.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-
     protected LocationManager locationManager;
 
     private EditText edtSearch;
@@ -87,7 +86,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
-                mMap.addMarker(new MarkerOptions().position(cameraPosition.target).title("Marker in Berlin"));
+                //mMap.addMarker(new MarkerOptions().position(cameraPosition.target).title("Marker in Berlin"));
 
 
                 //TODO mMap.clear();
@@ -225,7 +223,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String placeId = marker.getSnippet();
                 Log.d("Placeid by click:", placeId);
                 intent.putExtra("reference", placeId);
-
                 startActivity(intent);
 
 
@@ -326,7 +323,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        boolean result = rh.createRoute(routeName.getText().toString());
+                        boolean result = rh.createRoute(routeName.getText().toString(), PreferenceData.getPrefLoggedinUserId(getBaseContext()));
 
                     }
                 })
@@ -406,7 +403,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
  */
     private void UpdateCamera(LatLng newLatLng) {
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLatLng, 15);
-        mMap.addMarker(new MarkerOptions().position(newLatLng).title("You are here"));
+       //
+       // mMap.addMarker(new MarkerOptions().position(newLatLng).title("You are here"));
         mMap.animateCamera(update);
     }
 

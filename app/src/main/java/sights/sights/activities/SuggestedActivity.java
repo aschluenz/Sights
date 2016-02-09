@@ -13,19 +13,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import AppLogic.RouteHandler;
+import HttpNetwork.NetworkHelper;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import sights.sights.R;
 
 public class SuggestedActivity extends AppCompatActivity {
 
     ListView suggestedRoutes;
 
-    HashMap<String, String> routesByName = null;
+    HashMap<String, String> routesByName = new HashMap<>();
 
     private Intent i;
 
@@ -52,6 +59,7 @@ public class SuggestedActivity extends AppCompatActivity {
                 String routeid = routesByName.get(obj);
 
                 i.putExtra("routeID", routeid);
+                i.putExtra("isSavable", true);
                 startActivity(i);
             }
         });
@@ -61,34 +69,55 @@ public class SuggestedActivity extends AppCompatActivity {
 
     class suggestedListAsync extends AsyncTask<Void, Void, Void> {
 
+
         @Override
         protected Void doInBackground(Void... params) {
-            RouteHandler rh = new RouteHandler();
-            routesByName = rh.getAllRoutes();
+
+            String _url = "http://nodejs-sightsapp.rhcloud.com/route/all";
+
+            //get
+            NetworkHelper nh = new NetworkHelper();
+            nh.get(_url, new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    Log.d("getallRoutes:", e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsono = (JSONObject) jsonArray.get(i);
+                                routesByName.put(jsono.getString("title"),
+                                        jsono.getString("routeID"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            final ArrayList<String> list = new ArrayList<>();
+
+                            routesByName.keySet().toArray();
+                            for (Object o : routesByName.keySet().toArray()) {
+                                list.add(o.toString());
+                            }
+                            Log.d("List Array:", list.toString());
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, list);
+                            suggestedRoutes.setAdapter(adapter);
+
+                        }
+                    });
+                }
+            });
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    final ArrayList<String> list = new ArrayList<>();
-
-                    routesByName.keySet().toArray();
-                    for (Object o : routesByName.keySet().toArray()) {
-                        list.add(o.toString());
-                    }
-                    Log.d("List Array:", list.toString());
-                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, list);
-                    suggestedRoutes.setAdapter(adapter);
-
-                }
-            });
-        }
 
     }
 }

@@ -50,23 +50,10 @@ public class MySightsActivity extends AppCompatActivity {
 
                 String sightID = mySightsList.get(obj);
 
-
-                //TODO START DETAILS Activity
-                // i.putExtra("extra", routeid);
+                 i.putExtra("reference", sightID);
                 startActivity(i);
             }
         });
-
-
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
 
@@ -83,6 +70,11 @@ public class MySightsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             runOnUiThread(new Runnable() {
                 @Override

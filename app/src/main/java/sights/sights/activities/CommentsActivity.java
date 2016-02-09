@@ -12,7 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import AppLogic.PreferenceData;
+import HttpNetwork.NetworkHelper;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import sights.sights.R;
 
 public class CommentsActivity extends AppCompatActivity {
@@ -45,7 +54,8 @@ public class CommentsActivity extends AppCompatActivity {
         addComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // sendComment(PreferenceData.getPrefLoggedinUserId(getBaseContext()),objektId,commentText.getText(),isSight);
+            new SendComment().execute(PreferenceData.getPrefLoggedinUserId(getBaseContext()),objektId,commentText.getText().toString(),isSight.toString());
+                finish();
             }
         });
 
@@ -60,6 +70,56 @@ public class CommentsActivity extends AppCompatActivity {
         }); */
     }
 
+
+    public class SendComment extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            String _url;
+
+            JSONObject object = new JSONObject();
+            String url = "http://nodejs-sightsapp.rhcloud.com/";
+
+            if(params[3] == "true") {
+                 _url = url + "sight/addcomment";
+
+                try {
+                   // object.put("routeID", )
+                    object.put("placeID",params[1]);
+                    object.put("userID", params[0]);
+                    object.put("comment", params[2]);
+                } catch (JSONException e) {
+
+                }
+            }else{
+                 _url = url + "route/addcomment";
+                try {
+                    // object.put("routeID", )
+                    object.put("routeID",params[1]);
+                    object.put("userID", params[0]);
+                    object.put("comment", params[2]);
+                } catch (JSONException e) {
+
+                }
+            }
+
+            NetworkHelper nh = new NetworkHelper();
+            nh.post(_url, object.toString(), new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+
+                }
+            });
+            return null;
+        }
+
+    }
 
 
     public class AllCommentsAsyncTask extends AsyncTask<String,Void,Void>{
@@ -77,4 +137,6 @@ public class CommentsActivity extends AppCompatActivity {
            // new Thread()
         }
     }
+
+
 }
